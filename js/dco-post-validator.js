@@ -37,9 +37,13 @@
         showError: function () {
             var error = !$('.dco-pv-featured-error').hasClass('hidden') || !$('.dco-pv-title-error').hasClass('hidden') || !$('.dco-pv-content-error').hasClass('hidden');
             if (error) {
-                $('.dco-pv-validation-error').removeClass('hidden');
-                $('#publish').removeClass('disabled');
-                $('.is-active').removeClass('is-active');
+				//for compatibility with other validation plugins, e.g. ACF
+                setTimeout(function () {
+					$('.dco-pv-validation-error').removeClass('hidden');
+					$('#publish').removeClass('disabled');
+					$('.is-active').removeClass('is-active');
+				}, 1);
+				
                 return false;
             } else {
                 $('.dco-pv-validation-error').addClass('hidden');
