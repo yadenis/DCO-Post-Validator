@@ -27,7 +27,7 @@ After installing the plugin, you need to go to the Settings -> DCO Post Validato
 == Changelog ==
 
 = 1.0.1 =
-* Fixed compatibility with Advanced Custom Fields validation
+* Fixed compatibility with Advanced Custom Fields validation (thanks @nd62 for the report)
 
 = 1.0.0 =
 * Initial Release
