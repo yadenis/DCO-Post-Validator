@@ -3,9 +3,9 @@
 /*
   Plugin Name: DCO Post Validator
   Description: Allows you to make post, page, custom post elements required: title, content, featured image
-  Version: 1.0.1
+  Version: 1.1.0
   Author: Denis Yanchevskiy
-  Author URI: http://denisco.pro
+  Author URI: https://denisco.pro
   License: GPLv2 or later
   Text Domain: dco-post-validator
  */
