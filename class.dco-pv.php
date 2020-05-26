@@ -19,7 +19,12 @@ class DCO_PV extends DCO_PV_Base {
 
         //Activate validation only for new post screen and edit post screen and allow post types
         if (($hook == 'post-new.php' || $hook == 'post.php') && isset($this->post_types[$post->post_type])) {
-            wp_enqueue_script('dco-post-validator', DCO_PV__PLUGIN_URL . 'js/dco-post-validator.js', array('jquery'));
+			if( $this->is_gutenberg_editor_active() ) {
+				wp_enqueue_script('dco-post-validator', DCO_PV__PLUGIN_URL . 'js/dco-post-validator-gutenberg.js', array('wp-dom-ready', 'wp-i18n'));
+				wp_set_script_translations( 'dco-post-validator', 'dco-post-validator' );
+			} else {
+				wp_enqueue_script('dco-post-validator', DCO_PV__PLUGIN_URL . 'js/dco-post-validator.js', array('jquery'));
+			}
             wp_localize_script('dco-post-validator', 'dcopv', $this->get_js_options($post->post_type));
         }
     }
@@ -55,6 +60,50 @@ class DCO_PV extends DCO_PV_Base {
          */
         return apply_filters('dco_pv_get_js_options', $js_options, $post_type, $this->options);
     }
+	
+	/**
+	 * Check if Classic Editor plugin is active.
+	 *
+	 * @link https://kagg.eu/how-to-catch-gutenberg/
+	 *
+	 * @return bool
+	 */
+	private function is_classic_editor_plugin_active() {
+		if ( ! function_exists( 'is_plugin_active' ) ) {
+			include_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+
+		return is_plugin_active( 'classic-editor/classic-editor.php' );
+	}
+
+	/**
+	 * Check if Block Editor is active.
+	 *
+	 * @link https://kagg.eu/how-to-catch-gutenberg/
+	 *
+	 * @return bool
+	 */
+	private function is_gutenberg_editor_active() {
+
+		// Gutenberg plugin is installed and activated.
+		$gutenberg = ! ( false === has_filter( 'replace_editor', 'gutenberg_init' ) );
+
+		// Block editor since 5.0.
+		$block_editor = version_compare( $GLOBALS['wp_version'], '5.0-beta', '>' );
+
+		if ( ! $gutenberg && ! $block_editor ) {
+			return false;
+		}
+
+		if ( $this->is_classic_editor_plugin_active() ) {
+			$editor_option       = get_option( 'classic-editor-replace' );
+			$block_editor_active = [ 'no-replace', 'block' ];
+
+			return in_array( $editor_option, $block_editor_active, true );
+		}
+
+		return true;
+	}
 
 }
 
